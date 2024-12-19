@@ -11,7 +11,7 @@ DISK_THRESHOLD=80
 # Function to send a notification to Slack
 send_slack_notification() {
     local message="$1"
-    curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${message}\"}" $SLACK_WEBHOOK_URL
+    curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${message}\"}" "$SLACK_WEBHOOK_URL"
 }
 
 # Get CPU usage
@@ -21,17 +21,30 @@ if [[ -z "$CPU_USAGE" ]]; then
 fi
 
 # Get memory usage
-MEMORY_INFO=$(wmic OS get FreePhysicalMemory,TotalVisibleMemorySize /Value)
+MEMORY_INFO=$(wmic OS get FreePhysicalMemory,TotalVisibleMemorySize /Value | tr -d '\r')
 FREE_MEM=$(echo "$MEMORY_INFO" | grep FreePhysicalMemory | awk -F= '{print $2}')
 TOTAL_MEM=$(echo "$MEMORY_INFO" | grep TotalVisibleMemorySize | awk -F= '{print $2}')
-MEMORY_USED=$((TOTAL_MEM - FREE_MEM))
-MEMORY_USAGE=$(( (MEMORY_USED * 100) / TOTAL_MEM ))
+
+# Validate memory values
+if [[ -z "$FREE_MEM" || -z "$TOTAL_MEM" || "$TOTAL_MEM" -eq 0 ]]; then
+    MEMORY_USAGE=0
+else
+    MEMORY_USED=$((TOTAL_MEM - FREE_MEM))
+    MEMORY_USAGE=$(( (MEMORY_USED * 100 ) / TOTAL_MEM ))
+fi
 
 # Get disk usage for C:
-DISK_INFO=$(wmic logicaldisk where "DeviceID='C:'" get FreeSpace,Size /Value)
+DISK_INFO=$(wmic logicaldisk where "DeviceID='C:'" get FreeSpace,Size /Value | tr -d '\r')
 FREE_DISK=$(echo "$DISK_INFO" | grep FreeSpace | awk -F= '{print $2}')
 TOTAL_DISK=$(echo "$DISK_INFO" | grep Size | awk -F= '{print $2}')
-DISK_USAGE=$(( ( (TOTAL_DISK - FREE_DISK) * 100 ) / TOTAL_DISK ))
+
+# Validate disk values
+if [[ -z "$FREE_DISK" || -z "$TOTAL_DISK" || "$TOTAL_DISK" -eq 0 ]]; then
+    DISK_USAGE=0
+else
+    DISK_USED=$((TOTAL_DISK - FREE_DISK))
+    DISK_USAGE=$(( (DISK_USED * 100 ) / TOTAL_DISK ))
+fi
 
 # Check CPU threshold
 if [ "$CPU_USAGE" -gt "$CPU_THRESHOLD" ]; then
