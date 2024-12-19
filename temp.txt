@@ -1,0 +1,83 @@
+https://hooks.slack.com/services/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
+
+
+# Trigger the API endpoint for Slack notifications
+curl -X POST http://localhost:5000/notify -H "Content-Type: application/json" -d "{\"message\": \"High CPU Usage Detected: ${cpu_usage}%\"}"
+
+
+
+
+
+
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ ^[[200~curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, this is a test message from your webhook!"}' https://hooks.slack.com/services/your/webhook/url
+bash: $'\302\226\302\226\E[200~curl': command not found
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, this is a test message from your webhook!"}' https://hooks.slack.com/services/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
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    61  100     2  100    59      4    138 --:--:-- --:--:-- --:--:--   144ok
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ chmod +x ./eventmomotor.sh
+chmod: cannot access './eventmomotor.sh': No such file or directory
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ chmod +x ./eventmonotor.sh
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ crontab -e
+bash: crontab: command not found
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ ^C
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ curl -X POST http://localhost:5000/notify -H "Content-Type: application/json" -d "{\"message\": \"High CPU Usage is Normal: ${cpu_usage}%\"}"
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0
+curl: (7) Failed to connect to localhost port 5000 after 2258 ms: Couldn't connect to server
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ curl -X POST http://localhost:5000/notify -H "Content-Type: application/json" -d "{\"message\": \"High CPU Usage is Normal: ${cpu_usage}%\"}"
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    73  100    31  100    42     36     49 --:--:-- --:--:-- --:--:--    86{"status":"Notification sent"}
+
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ chmod +x ./eventmonotor.sh
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ ./monitor_system.sh
+bash: ./monitor_system.sh: No such file or directory
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ ./eventmonotor.sh
+Simulating system monitoring...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    35  100     2  100    33      5     84 --:--:-- --:--:-- --:--:--    90ok
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    38  100     2  100    36      5     93 --:--:-- --:--:-- --:--:--    99ok
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    40  100     2  100    38      5     99 --:--:-- --:--:-- --:--:--   105ok
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ ^[[200~curl -X POST http://localhost:5000/notify -H "Content-Type: application/json" -d "{\"message\": \"High CPU Usage Detected: ${cpu_usage}%\"}"
+bash: $'\E[200~curl': command not found
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$ curl -X POST http://localhost:5000/notify -H "Content-Type: application/json" -d "{\"message\": \"Everything is Fine: ${cpu_usage}%\"}"
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    67  100    31  100    36     39     46 --:--:-- --:--:-- --:--:--    86{"status":"Notification sent"}
+
+
+md atheeq@LAPTOP-BEALF1QG MINGW64 ~/OneDrive/Desktop/slack
+$
