@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Slack Webhook URL (replace with your actual webhook URL)
-SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
+SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
 
 # Threshold values
 CPU_THRESHOLD=80
