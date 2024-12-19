@@ -15,34 +15,35 @@ send_slack_notification() {
 }
 
 # Get CPU usage
-CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8}')
+CPU_USAGE=$(wmic cpu get loadpercentage | grep -Eo '[0-9]+')
 if [[ -z "$CPU_USAGE" ]]; then
     CPU_USAGE=0
 fi
 
 # Get memory usage
-MEMORY_USAGE=$(free | grep Mem | awk '{print ($3/$2) * 100}')
-if [[ -z "$MEMORY_USAGE" ]]; then
-    MEMORY_USAGE=0
-fi
+MEMORY_INFO=$(wmic OS get FreePhysicalMemory,TotalVisibleMemorySize /Value)
+FREE_MEM=$(echo "$MEMORY_INFO" | grep FreePhysicalMemory | awk -F= '{print $2}')
+TOTAL_MEM=$(echo "$MEMORY_INFO" | grep TotalVisibleMemorySize | awk -F= '{print $2}')
+MEMORY_USED=$((TOTAL_MEM - FREE_MEM))
+MEMORY_USAGE=$(( (MEMORY_USED * 100) / TOTAL_MEM ))
 
-# Get disk usage
-DISK_USAGE=$(df / | grep / | awk '{print $5}' | sed 's/%//g')
-if [[ -z "$DISK_USAGE" ]]; then
-    DISK_USAGE=0
-fi
+# Get disk usage for C:
+DISK_INFO=$(wmic logicaldisk where "DeviceID='C:'" get FreeSpace,Size /Value)
+FREE_DISK=$(echo "$DISK_INFO" | grep FreeSpace | awk -F= '{print $2}')
+TOTAL_DISK=$(echo "$DISK_INFO" | grep Size | awk -F= '{print $2}')
+DISK_USAGE=$(( ( (TOTAL_DISK - FREE_DISK) * 100 ) / TOTAL_DISK ))
 
 # Check CPU threshold
-if (( $(echo "$CPU_USAGE > $CPU_THRESHOLD" | bc -l) )); then
+if [ "$CPU_USAGE" -gt "$CPU_THRESHOLD" ]; then
     send_slack_notification "High CPU usage: ${CPU_USAGE}%"
 fi
 
 # Check Memory threshold
-if (( $(echo "$MEMORY_USAGE > $MEMORY_THRESHOLD" | bc -l) )); then
+if [ "$MEMORY_USAGE" -gt "$MEMORY_THRESHOLD" ]; then
     send_slack_notification "High Memory usage: ${MEMORY_USAGE}%"
 fi
 
 # Check Disk threshold
-if (( DISK_USAGE > DISK_THRESHOLD )); then
+if [ "$DISK_USAGE" -gt "$DISK_THRESHOLD" ]; then
     send_slack_notification "High Disk usage: ${DISK_USAGE}%"
 fi
